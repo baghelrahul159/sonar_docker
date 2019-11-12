@@ -1,6 +1,21 @@
 version:  '2.1'
 
 services:
+  golang:
+    image: golang
+    stdin_open: true
+    tty: true
+    environment:
+      - GOPATH=/usr/go
+    volumes:
+      - ../.:/usr/go/src/github.com/tokopedia/drogon
+      - ./properties/cov.out:/usr/cov.out
+      - $GOPATH:/usr/go
+    working_dir: /usr/go/src/github.com/tokopedia/drogon
+    command: ["go", "get","-d","./..."]
+    command: ["go", "test","-short","-coverprofile=./properties/cov.out","./..."]
+    networks:
+      - sonar_net
   postgres:
     image: postgres
     environment:
@@ -39,8 +54,9 @@ services:
       sonarqube:
         condition: service_healthy
     volumes:
-      - ../.:/usr/src
-      - sonar.properties:/usr/lib/sonar-scanner/conf
+      - ./:/usr/src
+      - ./properties/sonar-runner.properties:/usr/lib/sonar-scanner/conf/sonar-scanner.properties
+      - ./properties/cov.out:/usr/lib/sonar-scanner/cov/cov.out
     networks:
       - sonar_net
     
