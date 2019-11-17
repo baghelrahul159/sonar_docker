@@ -13,6 +13,8 @@ There are 4 services in the compose file running on sonar_net network
 3. sonarqube
 4. newtmitch/sonar-scanner
 
+Below is a breif description of each service:-
+
 1. golang service will copy source code into its working directory and execute go test to generate coverage report.
 2. postgres service will setup database with named volumes so as to switch from internal h2 database used by sonar.
 3. sonarqube will start the sonarqube service that will listen at 9000 port. It will be connected to postgres database and has a healthcheck attached to it that checks the health on the basis of /system/health API from sonar.
