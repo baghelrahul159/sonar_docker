@@ -8,14 +8,15 @@ services:
     environment:
       - GOPATH=/usr/go
     volumes:
-      - ../.:/usr/go/src/github.com/tokopedia/drogon
+      - ./.:/usr/go/src/
       - ./properties/cov.out:/usr/cov.out
       - $GOPATH:/usr/go
-    working_dir: /usr/go/src/github.com/tokopedia/drogon
+    working_dir: /usr/go/src/
     command: ["go", "get","-d","./..."]
     command: ["go", "test","-short","-coverprofile=./properties/cov.out","./..."]
     networks:
       - sonar_net
+
   postgres:
     image: postgres
     environment:
@@ -28,6 +29,7 @@ services:
 
   sonarqube:
     image: sonarqube
+    #change below port to listen at some other port eg. 9500:9000
     ports:
       - 9000:9000
     environment:
@@ -54,7 +56,7 @@ services:
       sonarqube:
         condition: service_healthy
     volumes:
-      - ./:/usr/src
+      - ./.:/usr/src
       - ./properties/sonar-runner.properties:/usr/lib/sonar-scanner/conf/sonar-scanner.properties
       - ./properties/cov.out:/usr/lib/sonar-scanner/cov/cov.out
     networks:
